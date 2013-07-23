@@ -9,6 +9,9 @@ browser using 256 bits AES.
 More information on the project page:
 http://sebsauvage.net/wiki/doku.php?id=php:zerobin
 
+Dies ist eine deutsche Modifikation von ZeroBin, wie es auf WiiDatabase Paste eingesetzt wird:
+http://wiidatabase.de/paste
+
 ------------------------------------------------------------------------------
 
 Copyright (c) 2012 Sébastien SAUVAGE (sebsauvage.net)
