@@ -145,16 +145,16 @@ if (!empty($_POST['data'])) // Create new paste/comment
 
     // Make sure last paste from the IP address was more than 10 seconds ago.
     if (!trafic_limiter_canPass($_SERVER['REMOTE_ADDR']))
-        { echo json_encode(array('status'=>1,'message'=>'Please wait 10 seconds between each post.')); exit; }
+        { echo json_encode(array('status'=>1,'message'=>'Bitte warte 10 Sekunden nach jedem Paste!')); exit; }
 
     // Make sure content is not too big.
     $data = $_POST['data'];
     if (strlen($data)>2000000)
-        { echo json_encode(array('status'=>1,'message'=>'Paste is limited to 2 Mb of encrypted data.')); exit; }
+        { echo json_encode(array('status'=>1,'message'=>'Dieser Paste ist grö&szlig;er als 2 MB!')); exit; }
 
     // Make sure format is correct.
     if (!validSJCL($data))
-        { echo json_encode(array('status'=>1,'message'=>'Invalid data.')); exit; }
+        { echo json_encode(array('status'=>1,'message'=>'Invalide Daten.')); exit; }
 
     // Read additional meta-information.
     $meta=array();
@@ -276,7 +276,7 @@ if (!empty($_POST['data'])) // Create new paste/comment
         if (!is_dir($storagedir)) mkdir($storagedir,$mode=0705,$recursive=true);
         if (is_file($storagedir.$dataid)) // Oups... improbable collision.
         {
-            echo json_encode(array('status'=>1,'message'=>'You are unlucky. Try again.'));
+            echo json_encode(array('status'=>1,'message'=>'Du hast kein Glück. Versuche es erneut...'));
             exit;
         }
         // New paste
@@ -305,18 +305,18 @@ function processPasteDelete($pasteid,$deletetoken)
         $filename = dataid2path($pasteid).$pasteid;
         if (!is_file($filename)) // Check that paste exists.
         {
-            return array('','Paste does not exist, has expired or has been deleted.','');
+            return array('','Paste existiert nicht, ist ausgelaufen oder wurde gelöscht.','');
         }
     }
 
     if ($deletetoken != hash_hmac('sha1', $pasteid , getServerSalt())) // Make sure token is valid.
     {
-        return array('','Wrong deletion token. Paste was not deleted.','');
+        return array('','Falscher Lösch-Token. Paste wurde nicht gelöscht','');
     }
 
     // Paste exists and deletion token is valid: Delete the paste.
     deletePaste($pasteid);
-    return array('','','Paste was properly deleted.');
+    return array('','','Paste wurde erfolgreich gelöscht!');
 }
 
 /* Process a paste fetch request.
@@ -329,7 +329,7 @@ function processPasteFetch($pasteid)
         $filename = dataid2path($pasteid).$pasteid;
         if (!is_file($filename)) // Check that paste exists.
         {
-            return array('','Paste does not exist, has expired or has been deleted.','');
+            return array('','Paste existiert nicht, ist ausgelaufen oder wurde gelöscht.','');
         }
     }    
 
@@ -340,7 +340,7 @@ function processPasteFetch($pasteid)
     if (isset($paste->meta->expire_date) && $paste->meta->expire_date<time())
     {
         deletePaste($pasteid);  // Delete the paste
-        return array('','Paste does not exist, has expired or has been deleted.','');
+        return array('','Paste existiert nicht, ist ausgelaufen oder wurde gelöscht.','');
     }
 
 
