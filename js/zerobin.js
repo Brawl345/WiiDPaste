@@ -195,7 +195,7 @@ function displayMessages(key, comments) {
     } catch(err) {
         $('div#cleartext').hide();
         $('button#clonebutton').hide();
-        showError('Could not decrypt data (Wrong key ?)');
+        showError('Could not decrypt data (Falscher SchlÃ¶ssel ?)');
         return;
     }
     setElementText($('div#cleartext'), cleartext);
@@ -208,7 +208,7 @@ function displayMessages(key, comments) {
     // Display paste expiration.
     if (comments[0].meta.expire_date) $('div#remainingtime').removeClass('foryoureyesonly').text('This document will expire in '+secondsToHuman(comments[0].meta.remaining_time)+'.').show();
     if (comments[0].meta.burnafterreading) {
-        $('div#remainingtime').addClass('foryoureyesonly').text('FOR YOUR EYES ONLY.  Don\'t close this window, this message can\'t be displayed again.').show();
+        $('div#remainingtime').addClass('foryoureyesonly').text('NUR FÃR DEINE AUGEN! Dieses Paste verfällt nach dem SchlieÃen der Seite! Bitte sei vorsichtig!').show();
         $('button#clonebutton').hide(); // Discourage cloning (as it can't really be prevented).
     }
 
@@ -218,7 +218,7 @@ function displayMessages(key, comments) {
         // For each comment.
         for (var i = 1; i < comments.length; i++) {
             var comment=comments[i];
-            var cleartext="[Could not decrypt comment ; Wrong key ?]";
+            var cleartext="[Kommentar konnte nicht entschlÃŒsselt werden ; Falscher SchlÃŒssel ?]";
             try {
                 cleartext = zeroDecipher(key, comment.data);
             } catch(err) { }
@@ -232,12 +232,12 @@ function displayMessages(key, comments) {
             }
             var divComment = $('<div class="comment" id="comment_' + comment.meta.commentid+'">'
                                + '<div class="commentmeta"><span class="nickname"></span><span class="commentdate"></span></div><div class="commentdata"></div>'
-                               + '<button onclick="open_reply($(this),\'' + comment.meta.commentid + '\');return false;">Reply</button>'
+                               + '<button onclick="open_reply($(this),\'' + comment.meta.commentid + '\');return false;">Antworten</button>'
                                + '</div>');
             setElementText(divComment.find('div.commentdata'), cleartext);
             // Convert URLs to clickable links in comment.
             urls2links(divComment.find('div.commentdata'));
-            divComment.find('span.nickname').html('<i>(Anonymous)</i>');
+            divComment.find('span.nickname').html('<i>(Anonym)</i>');
 
             // Try to get optional nickname:
             try {
@@ -247,12 +247,12 @@ function displayMessages(key, comments) {
 
             // If an avatar is available, display it.
             if (comment.meta.vizhash) {
-                divComment.find('span.nickname').before('<img src="' + comment.meta.vizhash + '" class="vizhash" title="Anonymous avatar (Vizhash of the IP address)" />');
+                divComment.find('span.nickname').before('<img src="' + comment.meta.vizhash + '" class="vizhash" title="Anonymer Avatar (Vizhash der IP-Adresse)" />');
             }
 
             place.append(divComment);
         }
-        $('div#comments').append('<div class="comment"><button onclick="open_reply($(this),\'' + pasteID() + '\');return false;">Add comment</button></div>');
+        $('div#comments').append('<div class="comment"><button onclick="open_reply($(this),\'' + pasteID() + '\');return false;">Kommentieren</button></div>');
         $('div#discussion').show();
     }
 }
@@ -265,9 +265,9 @@ function displayMessages(key, comments) {
 function open_reply(source, commentid) {
     $('div.reply').remove(); // Remove any other reply area.
     source.after('<div class="reply">'
-                + '<input type="text" id="nickname" title="Optional nickname..." value="Optional nickname..." />'
+                + '<input type="text" id="nickname" title="Optional nickname..." value="Optionaler Nickname..." />'
                 + '<textarea id="replymessage" class="replymessage" cols="80" rows="7"></textarea>'
-                + '<br><button id="replybutton" onclick="send_comment(\'' + commentid + '\');return false;">Post comment</button>'
+                + '<br><button id="replybutton" onclick="send_comment(\'' + commentid + '\');return false;">Kommentar posten</button>'
                 + '<div id="replystatus">&nbsp;</div>'
                 + '</div>');
     $('input#nickname').focus(function() {
@@ -304,22 +304,21 @@ function send_comment(parentid) {
 
     $.post(scriptLocation(), data_to_send, 'json')
         .error(function() {
-            showError('Comment could not be sent (serveur error or not responding).');
+            showError('Kommentar konnte nicht gesendet weden (SerfÃ¶r-vehleR oder der Server antwortet nicht.');
         })
         .success(function(data) {
             if (data.status == 0) {
-                showStatus('Comment posted.');
+                showStatus('Kommentar wurde gepostet.');
                 location.reload();
             }
             else if (data.status==1) {
-                showError('Could not post comment: '+data.message);
+                showError('Kommentar konnte nicht gepostet werden: '+data.message);
             }
             else {
-                showError('Could not post comment.');
+                showError('Kommentar konnte nicht gepostet werden.');
             }
         });
     }
-
 
 /**
  *  Send a new paste to server
@@ -329,17 +328,7 @@ function send_data() {
     if ($('textarea#message').val().length == 0) {
         return;
     }
-
-    // If sjcl has not collected enough entropy yet, display a message.
-    if (!sjcl.random.isReady())
-    {
-        showStatus('Sending paste (Please move your mouse for more entropy)...', spin=true);
-        sjcl.random.addEventListener('seeded', function(){ send_data(); }); 
-        return; 
-    }
-    
     showStatus('Sending paste...', spin=true);
-
     var randomkey = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0);
     var cipherdata = zeroCipher(randomkey, $('textarea#message').val());
     var data_to_send = { data:           cipherdata,
@@ -350,7 +339,7 @@ function send_data() {
                        };
     $.post(scriptLocation(), data_to_send, 'json')
         .error(function() {
-            showError('Data could not be sent (serveur error or not responding).');
+            showError('FEHLER: SerfÃ¶r-vehleR oder der Server antwortet nicht...');
         })
         .success(function(data) {
             if (data.status == 0) {
@@ -359,8 +348,8 @@ function send_data() {
                 var deleteUrl = scriptLocation() + "?pasteid=" + data.id + '&deletetoken=' + data.deletetoken;
                 showStatus('');
 
-                $('div#pastelink').html('Your paste is <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(Hit CTRL+C to copy)</span>');
-                $('div#deletelink').html('<a href="' + deleteUrl + '">Delete link</a>');
+                $('div#pastelink').html('URL: <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(DrÃŒcke STRG+C zum Kopieren)</span>');
+                $('div#deletelink').html('<a href="' + deleteUrl + '">LÃ¶schen</a>');
                 $('div#pasteresult').show();
                 selectText('pasteurl'); // We pre-select the link so that the user only has to CTRL+C the link.
 
@@ -373,10 +362,10 @@ function send_data() {
                 showStatus('');
             }
             else if (data.status==1) {
-                showError('Could not create paste: '+data.message);
+                showError('Paste konnte nicht erstellt werden: '+data.message);
             }
             else {
-                showError('Could not create paste.');
+                showError('Paste konnte nicht erstellt werden.');
             }
         });
 }
@@ -586,7 +575,7 @@ $(function() {
     if ($('div#cipherdata').text().length > 1) {
         // Missing decryption key in URL ?
         if (window.location.hash.length == 0) {
-            showError('Cannot decrypt paste: Decryption key missing in URL (Did you use a redirector or an URL shortener which strips part of the URL ?)');
+            showError('Konnte Paste nicht entschlüsseln: Schlüssel fehlt in URL (Benutzt du einen URL-Shortener, der Teile der URL löscht?)');
             return;
         }
 
