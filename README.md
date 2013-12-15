@@ -1,7 +1,7 @@
 WiiDPaste 0.19 
 ====================
 
-*DIES IST EINE ALPHA-SOFTWARE - BENUTZUNG AUF EIGENE GEFAHR"
+**DIES IST EINE ALPHA-SOFTWARE - BENUTZUNG AUF EIGENE GEFAHR**
 
 WiiDPaste, geforkt von ZeroBin, ist ein minimalistischer, Open-Source Pastebin-Service.
 Der Server hat keine Ahnung von den "Pastes" die du verschickst. Daten werden im Browser mit 256-AES ver- und entschlüsselt
@@ -12,7 +12,12 @@ http://wiidatabase.de/paste
 Projektseite von ZeroBin (englisch):
 http://sebsauvage.net/wiki/doku.php?id=php:zerobin
 
-------------------------------------------------------------------------------
+## Installation
+1. Kopiere alle Dateien in einen Ordner auf deinen Server
+2. Rufe die URL im Browser auf
+3. Fertig!
+
+## Lizenzinformationen
 
 Copyright (c) 2012 Sébastien SAUVAGE (sebsauvage.net)
 
