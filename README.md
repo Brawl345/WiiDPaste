@@ -1,16 +1,16 @@
-ZeroBin 0.19 Alpha
+WiiDPaste 0.19 
+====================
 
-==== THIS IS ALPHA SOFTWARE - USE AT YOUR OWN RISKS ====
+*DIES IST EINE ALPHA-SOFTWARE - BENUTZUNG AUF EIGENE GEFAHR"
 
-ZeroBin is a minimalist, opensource online pastebin where the server 
-has zero knowledge of pasted data. Data is encrypted/decrypted in the 
-browser using 256 bits AES. 
-
-More information on the project page:
-http://sebsauvage.net/wiki/doku.php?id=php:zerobin
+WiiDPaste, geforkt von ZeroBin, ist ein minimalistischer, Open-Source Pastebin-Service.
+Der Server hat keine Ahnung von den "Pastes" die du verschickst. Daten werden im Browser mit 256-AES ver- und entschlüsselt
 
 Dies ist eine deutsche Modifikation von ZeroBin, wie es auf WiiDatabase Paste eingesetzt wird:
 http://wiidatabase.de/paste
+
+Projektseite von ZeroBin (englisch):
+http://sebsauvage.net/wiki/doku.php?id=php:zerobin
 
 ------------------------------------------------------------------------------
 
