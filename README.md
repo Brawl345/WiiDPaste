@@ -6,8 +6,7 @@ WiiDPaste 0.19
 WiiDPaste, geforkt von ZeroBin, ist ein minimalistischer, Open-Source Pastebin-Service.
 Der Server hat keine Ahnung von den "Pastes" die du verschickst. Daten werden im Browser mit 256-AES ver- und entschlüsselt
 
-Dies ist eine deutsche Modifikation von ZeroBin, wie es auf WiiDatabase Paste eingesetzt wird:
-http://wiidatabase.de/paste
+Dies ist eine deutsche Modifikation von ZeroBin, wie sie auf [WiiDatabase Paste](http://wiidatabase.de/paste) eingesetzt wird.
 
 Projektseite von ZeroBin (englisch):
 http://sebsauvage.net/wiki/doku.php?id=php:zerobin
