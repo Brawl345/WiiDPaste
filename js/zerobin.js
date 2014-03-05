@@ -195,7 +195,7 @@ function displayMessages(key, comments) {
     } catch(err) {
         $('div#cleartext').hide();
         $('button#clonebutton').hide();
-        showError('Could not decrypt data (Falscher SchlÃ¶ssel ?)');
+        showError('Could not decrypt data (Falscher Schlössel ?)');
         return;
     }
     setElementText($('div#cleartext'), cleartext);
@@ -208,7 +208,7 @@ function displayMessages(key, comments) {
     // Display paste expiration.
     if (comments[0].meta.expire_date) $('div#remainingtime').removeClass('foryoureyesonly').text('This document will expire in '+secondsToHuman(comments[0].meta.remaining_time)+'.').show();
     if (comments[0].meta.burnafterreading) {
-        $('div#remainingtime').addClass('foryoureyesonly').text('NUR FÃR DEINE AUGEN! Dieses Paste verfällt nach dem SchlieÃen der Seite! Bitte sei vorsichtig!').show();
+        $('div#remainingtime').addClass('foryoureyesonly').text('NUR FÜR DEINE AUGEN! Dieses Paste verfällt nach dem Schließen der Seite! Bitte sei vorsichtig!').show();
         $('button#clonebutton').hide(); // Discourage cloning (as it can't really be prevented).
     }
 
@@ -218,7 +218,7 @@ function displayMessages(key, comments) {
         // For each comment.
         for (var i = 1; i < comments.length; i++) {
             var comment=comments[i];
-            var cleartext="[Kommentar konnte nicht entschlÃŒsselt werden ; Falscher SchlÃŒssel ?]";
+            var cleartext="[Kommentar konnte nicht entschlüsselt werden ; Falscher Schlüssel ?]";
             try {
                 cleartext = zeroDecipher(key, comment.data);
             } catch(err) { }
@@ -304,7 +304,7 @@ function send_comment(parentid) {
 
     $.post(scriptLocation(), data_to_send, 'json')
         .error(function() {
-            showError('Kommentar konnte nicht gesendet weden (SerfÃ¶r-vehleR oder der Server antwortet nicht.');
+            showError('Kommentar konnte nicht gesendet weden (Serför-vehleR oder der Server antwortet nicht.');
         })
         .success(function(data) {
             if (data.status == 0) {
@@ -339,7 +339,7 @@ function send_data() {
                        };
     $.post(scriptLocation(), data_to_send, 'json')
         .error(function() {
-            showError('FEHLER: SerfÃ¶r-vehleR oder der Server antwortet nicht...');
+            showError('FEHLER: Serför-vehleR oder der Server antwortet nicht...');
         })
         .success(function(data) {
             if (data.status == 0) {
@@ -348,8 +348,8 @@ function send_data() {
                 var deleteUrl = scriptLocation() + "?pasteid=" + data.id + '&deletetoken=' + data.deletetoken;
                 showStatus('');
 
-                $('div#pastelink').html('URL: <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(DrÃŒcke STRG+C zum Kopieren)</span>');
-                $('div#deletelink').html('<a href="' + deleteUrl + '">LÃ¶schen</a>');
+                $('div#pastelink').html('URL: <a id="pasteurl" href="' + url + '">' + url + '</a> <span id="copyhint">(Drücke STRG+C zum Kopieren)</span>');
+                $('div#deletelink').html('<a href="' + deleteUrl + '">Löschen</a>');
                 $('div#pasteresult').show();
                 selectText('pasteurl'); // We pre-select the link so that the user only has to CTRL+C the link.
 
@@ -575,7 +575,7 @@ $(function() {
     if ($('div#cipherdata').text().length > 1) {
         // Missing decryption key in URL ?
         if (window.location.hash.length == 0) {
-            showError('Konnte Paste nicht entschlüsseln: Schlüssel fehlt in URL (Benutzt du einen URL-Shortener, der Teile der URL löscht?)');
+            showError('Konnte Paste nicht entschl�sseln: Schl�ssel fehlt in URL (Benutzt du einen URL-Shortener, der Teile der URL l�scht?)');
             return;
         }
 
