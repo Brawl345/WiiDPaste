@@ -195,7 +195,7 @@ function displayMessages(key, comments) {
     } catch(err) {
         $('div#cleartext').hide();
         $('button#clonebutton').hide();
-        showError('Could not decrypt data (Falscher Schlössel ?)');
+        showError('Could not decrypt data (Falscher Schlüssel ?)');
         return;
     }
     setElementText($('div#cleartext'), cleartext);
