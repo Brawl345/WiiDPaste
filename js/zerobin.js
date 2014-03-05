@@ -575,7 +575,7 @@ $(function() {
     if ($('div#cipherdata').text().length > 1) {
         // Missing decryption key in URL ?
         if (window.location.hash.length == 0) {
-            showError('Konnte Paste nicht entschl�sseln: Schl�ssel fehlt in URL (Benutzt du einen URL-Shortener, der Teile der URL l�scht?)');
+            showError('Konnte Paste nicht entschlüsseln: Schlüssel fehlt in URL (Benutzt du einen URL-Shortener, der Teile der URL löscht?)');
             return;
         }
 
