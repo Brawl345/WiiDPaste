@@ -1,4 +1,4 @@
-WiiDPaste 0.19 
+WiiDPaste 0.19-1
 ====================
 
 **DIES IST EINE ALPHA-SOFTWARE - BENUTZUNG AUF EIGENE GEFAHR**

@@ -78,3 +78,15 @@
   * **Alpha 0.19 (2013-07-05)**:
     * Corrected XSS security flaw which affected IE<10. Other browsers were not affected.
     * Corrected spacing display in IE<10.
+    
+  * **Alpha 0.19-1 (2014-03-29)**:
+    * Bugfix-Release des WiiDatabase Teams, um die Sicherheit zu erhöhen:
+    * FIXED: Weiter eingedeutscht
+    * ADDED: Social Media Links hinzugefügt
+    * CHANGED: Haupt-CSS und Theme-CSS gesplittet (erlaubt bessere Anpassung, ein Light-Theme ist mit enthalten!)
+    * FIXED: Typos gefixt
+    * CHANGED: Wenn der Paste-Identifier falsch ist, wird nun eine "Invalide Daten" Meldung angezeigt, anstatt "falscher Token"
+    * FIXED: Sicherheitsproblem gefixt: Wenn man HTML/Javascript gepastet hat und mit RAW-Text betrachtet hat, wurde das HTML/Javascript interpretiert, anstatt angezeigt, was ein enormes Sicherheitsproblem ist. Alle Pastes werden nun so angezeigt, wie sie gepastet wurden. Sie werden nicht mehr ausgeführt
+    * ADDED: Stärkerer Server-Salt. Dies fixt das Problem, dass VizHash exploited werden kann
+    * Mehrere Bugs gefixt (u.a. "Optionaler Nickname..." als Name bei Kommentaren. Hier wird nun automatisch dies durch "(Anonym)" ersetzt!
+    * Mehrere Sicherheitsprobleme gefixt

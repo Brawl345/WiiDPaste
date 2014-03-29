@@ -1,5 +1,5 @@
 /**
- * ZeroBin 0.19
+ * ZeroBin 0.19-1
  *
  * @link http://sebsauvage.net/wiki/doku.php?id=php:zerobin
  * @author sebsauvage
