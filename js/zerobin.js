@@ -265,7 +265,7 @@ function displayMessages(key, comments) {
 function open_reply(source, commentid) {
     $('div.reply').remove(); // Remove any other reply area.
     source.after('<div class="reply">'
-                + '<input type="text" id="nickname" title="Optional nickname..." value="Optionaler Nickname..." />'
+                + '<input type="text" id="nickname" title="Optional nickname..." value="Optional nickname..." />'
                 + '<textarea id="replymessage" class="replymessage" cols="80" rows="7"></textarea>'
                 + '<br><button id="replybutton" onclick="send_comment(\'' + commentid + '\');return false;">Kommentar posten</button>'
                 + '<div id="replystatus">&nbsp;</div>'
@@ -442,10 +442,9 @@ function stateExistingPaste() {
   */
 function rawText()
 {
-    history.pushState(document.title, document.title, 'document.txt');
-    var paste = $('div#cleartext').text();
-    var newDoc = document.open('text/plain', 'replace');
-    newDoc.write(paste);
+    var paste = $('div#cleartext').html();
+    var newDoc = document.open('text/html', 'replace');
+    newDoc.write('<pre>'+paste+'</pre>');
     newDoc.close();
 }
 

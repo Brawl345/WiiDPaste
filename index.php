@@ -24,7 +24,7 @@ function trafic_limiter_canPass($ip)
     $tfilename='./data/trafic_limiter.php';
     if (!is_file($tfilename))
     {
-        file_put_contents($tfilename,"<?php\n\$GLOBALS['trafic_limiter']=array();\n?>");
+        file_put_contents($tfilename,"<?php\n\$GLOBALS['trafic_limiter']=array();\n?>", LOCK_EX);
         chmod($tfilename,0705);
     }
     require $tfilename;
@@ -35,8 +35,20 @@ function trafic_limiter_canPass($ip)
         // FIXME: purge file of expired IPs to keep it small
     }
     $tl[$ip]=time();
-    file_put_contents($tfilename, "<?php\n\$GLOBALS['trafic_limiter']=".var_export($tl,true).";\n?>");
+file_put_contents($tfilename, "<?php\n\$GLOBALS['trafic_limiter']=".var_export($tl,true).";\n?>", LOCK_EX);
     return true;
+}
+
+// Constant time string comparison.
+// (Used to deter time attacks on hmac checking. See section 2.7 of https://defuse.ca/audits/zerobin.htm)
+function slow_equals($a, $b)
+{
+    $diff = strlen($a) ^ strlen($b);
+    for($i = 0; $i < strlen($a) && $i < strlen($b); $i++)
+    {
+        $diff |= ord($a[$i]) ^ ord($b[$i]);
+    }
+    return $diff === 0;
 }
 
 /* Convert paste id to storage path.
@@ -140,7 +152,7 @@ if (!empty($_POST['data'])) // Create new paste/comment
     if (!is_dir('data'))
     {
         mkdir('data',0705);
-        file_put_contents('data/.htaccess',"Allow from none\nDeny from all\n");
+        file_put_contents('data/.htaccess',"Allow from none\nDeny from all\n", LOCK_EX);
     }
 
     // Make sure last paste from the IP address was more than 10 seconds ago.
@@ -224,7 +236,7 @@ if (!empty($_POST['data'])) // Create new paste/comment
 
     if ($error)
     {
-        echo json_encode(array('status'=>1,'message'=>'Invalid data.'));
+        echo json_encode(array('status'=>1,'message'=>'Invalide Daten.'));
         exit;
     }
 
@@ -242,8 +254,8 @@ if (!empty($_POST['data'])) // Create new paste/comment
     {
         $pasteid = $_POST['pasteid'];
         $parentid = $_POST['parentid'];
-        if (!preg_match('/\A[a-f\d]{16}\z/',$pasteid)) { echo json_encode(array('status'=>1,'message'=>'Invalid data.')); exit; }
-        if (!preg_match('/\A[a-f\d]{16}\z/',$parentid)) { echo json_encode(array('status'=>1,'message'=>'Invalid data.')); exit; }
+        if (!preg_match('/\A[a-f\d]{16}\z/',$pasteid)) { echo json_encode(array('status'=>1,'message'=>'Invalide Daten.')); exit; }
+        if (!preg_match('/\A[a-f\d]{16}\z/',$parentid)) { echo json_encode(array('status'=>1,'message'=>'Invalide Daten.')); exit; }
 
         unset($storage['expire_date']); // Comment do not expire (it's the paste that expires)
         unset($storage['opendiscussion']);
@@ -251,22 +263,22 @@ if (!empty($_POST['data'])) // Create new paste/comment
 
         // Make sure paste exists.
         $storagedir = dataid2path($pasteid);
-        if (!is_file($storagedir.$pasteid)) { echo json_encode(array('status'=>1,'message'=>'Invalid data.')); exit; }
+        if (!is_file($storagedir.$pasteid)) { echo json_encode(array('status'=>1,'message'=>'Invalide Daten.')); exit; }
 
         // Make sure the discussion is opened in this paste.
         $paste=json_decode(file_get_contents($storagedir.$pasteid));
-        if (!$paste->meta->opendiscussion) { echo json_encode(array('status'=>1,'message'=>'Invalid data.')); exit; }
+        if (!$paste->meta->opendiscussion) { echo json_encode(array('status'=>1,'message'=>'Invalide Daten.')); exit; }
 
         $discdir = dataid2discussionpath($pasteid);
         $filename = $pasteid.'.'.$dataid.'.'.$parentid;
         if (!is_dir($discdir)) mkdir($discdir,$mode=0705,$recursive=true);
         if (is_file($discdir.$filename)) // Oups... improbable collision.
         {
-            echo json_encode(array('status'=>1,'message'=>'You are unlucky. Try again.'));
+            echo json_encode(array('status'=>1,'message'=>'Du hast kein Glück. Versuche es erneut.'));
             exit;
         }
 
-        file_put_contents($discdir.$filename,json_encode($storage));
+        file_put_contents($discdir.$filename,json_encode($storage), LOCK_EX);
         echo json_encode(array('status'=>0,'id'=>$dataid)); // 0 = no error
         exit;
     }
@@ -280,7 +292,7 @@ if (!empty($_POST['data'])) // Create new paste/comment
             exit;
         }
         // New paste
-        file_put_contents($storagedir.$dataid,json_encode($storage));
+        file_put_contents($storagedir.$dataid,json_encode($storage), LOCK_EX);
 
         // Generate the "delete" token.
         // The token is the hmac of the pasteid signed with the server salt.
@@ -308,10 +320,14 @@ function processPasteDelete($pasteid,$deletetoken)
             return array('','Paste existiert nicht, ist ausgelaufen oder wurde gelöscht.','');
         }
     }
+    else
+    {
+        return array('','Invalide Daten','');
+    }
 
     if ($deletetoken != hash_hmac('sha1', $pasteid , getServerSalt())) // Make sure token is valid.
     {
-        return array('','Falscher Lösch-Token. Paste wurde nicht gelöscht','');
+        return array('','Falscher Lösch-Token. Paste wurde nicht gelöscht.','');
     }
 
     // Paste exists and deletion token is valid: Delete the paste.
@@ -329,9 +345,13 @@ function processPasteFetch($pasteid)
         $filename = dataid2path($pasteid).$pasteid;
         if (!is_file($filename)) // Check that paste exists.
         {
-            return array('','Paste existiert nicht, ist ausgelaufen oder wurde gelöscht.','');
+            return array('','Paste does not exist, has expired or has been deleted.','');
         }
-    }    
+    }
+    else
+    {
+        return array('','Invalide Daten','');
+    } 
 
     // Get the paste itself.
     $paste=json_decode(file_get_contents($filename));
